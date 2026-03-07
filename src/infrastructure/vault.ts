@@ -1,8 +1,8 @@
+import type { Block } from "@domain";
 /**
  * Bridge to Tauri vault commands. Errors from Rust surface as rejected promises.
  */
 import { invoke } from "@tauri-apps/api/core";
-import type { Block } from "./vault-types";
 
 /** Open an existing vault at the given path. */
 export function openVault(path: string): Promise<void> {

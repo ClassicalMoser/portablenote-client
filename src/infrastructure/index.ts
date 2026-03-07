@@ -1,0 +1,1 @@
+export { addBlock, addEdge, deleteBlock, initVault, listBlocks, mutateContent, openVault, removeEdge, renameBlock } from "./vault";
