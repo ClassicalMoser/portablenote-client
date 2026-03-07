@@ -1,37 +1,43 @@
-import { createSignal } from 'solid-js'
-import solidLogo from './assets/solid.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { createSignal } from "solid-js";
+import { open } from "@tauri-apps/plugin-dialog";
+import { initVault } from "./lib";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = createSignal(0)
+  const [status, setStatus] = createSignal<"idle" | "loading" | "success" | "error">("idle");
+  const [message, setMessage] = createSignal("");
+
+  async function handleInitVault() {
+    const path = await open({
+      directory: true,
+      multiple: false,
+    });
+    if (path == null) return;
+    setStatus("loading");
+    setMessage("");
+    try {
+      await initVault(path);
+      setStatus("success");
+      setMessage(`Vault initialized at ${path}`);
+    } catch (e) {
+      setStatus("error");
+      setMessage(e instanceof Error ? e.message : String(e));
+    }
+  }
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} class="logo" alt="Vite logo" />
-        </a>
-        <a href="https://solidjs.com" target="_blank">
-          <img src={solidLogo} class="logo solid" alt="Solid logo" />
-        </a>
-      </div>
-      <h4>Portable Note</h4>
-      <a>SNEAKY SNEAKY</a>
-      <h1>Vite + Solid</h1>
+      <h1>Portable Note</h1>
       <div class="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count()}
+        <button onClick={handleInitVault} disabled={status() === "loading"}>
+          {status() === "loading" ? "Initializing…" : "Init vault…"}
         </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+        {message() && (
+          <p class={status() === "error" ? "status error" : "status success"}>{message()}</p>
+        )}
       </div>
-      <p class="read-the-docs">
-        Click on the Vite and Solid logos to learn more
-      </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

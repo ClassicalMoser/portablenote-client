@@ -22,6 +22,13 @@
   padding: 2em;
 }
 
-.read-the-docs {
-  color: #888;
+.card .status {
+  margin-top: 1em;
+  font-size: 0.9em;
+}
+.card .status.error {
+  color: #c33;
+}
+.card .status.success {
+  color: #383;
 }
