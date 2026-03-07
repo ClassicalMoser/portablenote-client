@@ -1,5 +1,3 @@
-import { addBlock } from "@infrastructure";
-
 /** Block returned from list_blocks; matches Rust portablenote_core::domain::types::Block */
 export interface Block {
   id: string;

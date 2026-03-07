@@ -1,15 +1,21 @@
 export const boundaries = [
   {
     identifier: "@interface",
-    dir: "interface",
+    dir: "",
     alias: "@interface",
-    allowImportsFrom: ["@domain", "@infrastructure"],
+    allowImportsFrom: ["@application", "@composition", "@domain"],
+  },
+  {
+    identifier: "@composition",
+    dir: "composition",
+    alias: "@composition",
+    allowImportsFrom: ["@application", "@domain", "@infrastructure"],
   },
   {
     identifier: "@application",
     dir: "application",
     alias: "@application",
-    allowImportsFrom: ["@domain"],
+    allowImportsFrom: ["@domain", "@infrastructure"],
   },
   {
     identifier: "@domain",
