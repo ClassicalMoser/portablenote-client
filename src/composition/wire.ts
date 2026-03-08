@@ -1,7 +1,8 @@
 /**
- * Composition root: wires infrastructure (folder picker) into application.
+ * Composition root: wires infrastructure ports into application (one port per setter).
  */
-import { setFolderPicker } from "@application";
-import { tauriFolderPicker } from "@infrastructure";
+import { setFolderPicker, setVaultPort } from "@application";
+import { tauriFolderPicker, tauriVaultPort } from "@infrastructure";
 
 setFolderPicker(tauriFolderPicker);
+setVaultPort(tauriVaultPort);

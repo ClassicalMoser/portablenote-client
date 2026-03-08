@@ -1,4 +1,5 @@
-export type { FolderPickerPort } from "@domain";
+export { setFolderPicker, setVaultPort } from "./portRegistry";
+export type { FolderPickerPort, VaultPort } from "./ports";
 export {
   addBlock,
   initVault,
@@ -6,5 +7,4 @@ export {
   listBlocks,
   openVault,
   openVaultWithPicker,
-  setFolderPicker,
 } from "./vault";

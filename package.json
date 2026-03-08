@@ -15,7 +15,12 @@
     "tauri:dev": "tauri dev",
     "tauri:build": "tauri build",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:fix": "prettier --write . --fix",
+    "typecheck": "tsc --noEmit",
+    "validate": "pnpm run lint && pnpm run format && pnpm run typecheck",
+    "validate:fix": "pnpm run lint:fix && pnpm run format:fix && pnpm run typecheck"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.10.1",
