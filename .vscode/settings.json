@@ -1,0 +1,51 @@
+{
+    "prettier.enable": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[json]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[jsonc]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit",
+      "source.formatDocument": "explicit"
+    },
+    "editor.formatOnSave": true,
+    "eslint.enable": true,
+    "eslint.run": "onType",
+    "eslint.nodePath": "node_modules",
+  
+    // Enable eslint for all supported languages
+    "eslint.validate": [
+      "javascript",
+      "javascriptreact",
+      "typescript",
+      "typescriptreact",
+      "vue",
+      "html",
+      "markdown",
+      "json",
+      "jsonc",
+      "yaml",
+      "toml",
+      "xml",
+      "gql",
+      "graphql",
+      "astro",
+      "svelte",
+      "css",
+      "less",
+      "scss",
+      "pcss",
+      "postcss"
+    ],
+    "testing.coverageToolbarEnabled": true,
+  
+    "typescript.suggest.autoImports": true,
+    "typescript.preferences.autoImportFileExcludePatterns": [
+      "**/node_modules/**/lodash", // Exclude lodash from auto-import suggestions
+      "**/node_modules/**/moment"
+    ]
+  }
+  
