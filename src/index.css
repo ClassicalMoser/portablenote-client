@@ -5,9 +5,9 @@
   --text-muted: #737373;
   --border: #333;
   --border-hover: #444;
-  --accent: #7c8aff;
-  --error: #f87171;
-  --success: #86efac;
+  --accent: darkorange;
+  --error: darkred;
+  --success: darkgreen;
 
   font-family: system-ui, sans-serif;
   line-height: 1.5;
