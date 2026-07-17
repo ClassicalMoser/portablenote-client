@@ -1,1 +1,28 @@
-export type { Block } from "./vault-types";
+export type {
+  BlockContent,
+  BlockRef,
+  BlockRefOccurrence,
+  Break,
+  Code,
+  ContentBlock,
+  ContentCodecErrorCode,
+  Delete,
+  Emphasis,
+  Html,
+  Image,
+  Inline,
+  InlineCode,
+  Link,
+  List,
+  ListItem,
+  Paragraph,
+  Strong,
+  Table,
+  TableCell,
+  TableRow,
+  Text,
+  ThematicBreak,
+  Blockquote,
+} from './content';
+export { ContentCodecError, extractBlockRefs } from './content';
+export type { Block } from './vault-types';

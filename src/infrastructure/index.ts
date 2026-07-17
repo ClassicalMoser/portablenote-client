@@ -1,4 +1,6 @@
-export { tauriFolderPicker } from "./folderPicker";
+export { tauriAppSettings } from './appSettings';
+export { remarkContentCodec } from './codec';
+export { tauriFolderPicker } from './folderPicker';
 export {
   addBlock,
   addEdge,
@@ -9,5 +11,5 @@ export {
   openVault,
   removeEdge,
   renameBlock,
-} from "./vault";
-export { tauriVaultPort } from "./vaultAdapter";
+} from './vault';
+export { tauriVaultPort } from './vaultAdapter';

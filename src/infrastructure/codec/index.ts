@@ -1,0 +1,1 @@
+export { remarkContentCodec } from './remarkContentCodec';

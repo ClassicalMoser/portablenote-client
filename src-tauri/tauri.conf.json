@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "Portable Note",
+        "title": "Embernote",
         "width": 800,
         "height": 600,
         "resizable": true,

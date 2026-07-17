@@ -1,0 +1,186 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+@import 'tw-animate-css';
+@import './base.css';
+
+@custom-variant dark (&:is(.dark *));
+
+/* Preview pane: keep list markers visible even if prose tokens lag. */
+@utility md-preview {
+  & :where(ul) {
+    list-style-type: disc;
+    padding-inline-start: 1.5rem;
+    margin-block: 0.75em;
+  }
+
+  & :where(ol) {
+    list-style-type: decimal;
+    padding-inline-start: 1.5rem;
+    margin-block: 0.75em;
+  }
+
+  & :where(li) {
+    margin-block: 0.25em;
+  }
+
+  & :where(li > p) {
+    margin-block: 0.25em;
+  }
+}
+
+:root {
+  /*
+    Embernote brand (from icon.svg)
+    midnight  #080018  rgb(8 0 24)       → oklch(0.114 0.061 298.1)
+    crimson   #800600  rgb(128 6 0)      → oklch(0.380 0.152 30.1)
+    rust      #9F3000  rgb(159 48 0)     → oklch(0.473 0.154 38.2)
+    gold      #FF990E  rgb(255 153 14)   → oklch(0.772 0.172 64.0)
+  */
+  --ember-midnight: oklch(0.114 0.061 298.1);
+  --ember-crimson: oklch(0.38 0.152 30.1);
+  --ember-rust: oklch(0.473 0.154 38.2);
+  --ember-gold: oklch(0.772 0.172 64);
+
+  --radius: 0.625rem;
+
+  /*
+    Shadcn role map
+    rust     → primary          (default buttons, links, checked)
+    crimson  → ring + destructive (focus/outline, danger)
+    gold     → accent           (action highlights, selected rows)
+    midnight → field / ink
+  */
+
+  /* Light: warm paper, midnight ink, brand fills */
+  --background: oklch(0.97 0.015 70);
+  --foreground: var(--ember-midnight);
+  --card: oklch(0.99 0.01 70);
+  --card-foreground: var(--ember-midnight);
+  --popover: oklch(0.99 0.01 70);
+  --popover-foreground: var(--ember-midnight);
+  --primary: var(--ember-rust);
+  --primary-foreground: oklch(0.98 0.01 80);
+  --secondary: oklch(0.94 0.03 38);
+  --secondary-foreground: var(--ember-crimson);
+  --muted: oklch(0.94 0.02 50);
+  --muted-foreground: oklch(0.42 0.04 30);
+  --accent: var(--ember-gold);
+  --accent-foreground: var(--ember-midnight);
+  --destructive: var(--ember-crimson);
+  --destructive-foreground: oklch(0.98 0.01 80);
+  --border: oklch(0.86 0.04 30);
+  --input: oklch(0.86 0.04 30);
+  --ring: var(--ember-crimson);
+  --chart-1: var(--ember-rust);
+  --chart-2: var(--ember-gold);
+  --chart-3: var(--ember-crimson);
+  --chart-4: oklch(0.55 0.06 298);
+  --chart-5: var(--ember-midnight);
+  --sidebar: oklch(0.96 0.02 60);
+  --sidebar-foreground: var(--ember-midnight);
+  --sidebar-primary: var(--ember-rust);
+  --sidebar-primary-foreground: oklch(0.98 0.01 80);
+  --sidebar-accent: var(--ember-gold);
+  --sidebar-accent-foreground: var(--ember-midnight);
+  --sidebar-border: oklch(0.86 0.04 30);
+  --sidebar-ring: var(--ember-crimson);
+}
+
+.dark {
+  --background: var(--ember-midnight);
+  --foreground: oklch(0.95 0.02 80);
+  --card: oklch(0.17 0.05 298);
+  --card-foreground: oklch(0.95 0.02 80);
+  --popover: oklch(0.17 0.05 298);
+  --popover-foreground: oklch(0.95 0.02 80);
+  --primary: var(--ember-rust);
+  --primary-foreground: oklch(0.98 0.01 80);
+  --secondary: oklch(0.22 0.04 298);
+  --secondary-foreground: oklch(0.95 0.02 80);
+  --muted: oklch(0.22 0.04 298);
+  --muted-foreground: oklch(0.72 0.03 70);
+  --accent: var(--ember-gold);
+  --accent-foreground: var(--ember-midnight);
+  --destructive: var(--ember-crimson);
+  --destructive-foreground: oklch(0.95 0.02 80);
+  --border: oklch(0.3 0.06 30);
+  --input: oklch(0.3 0.06 30);
+  --ring: var(--ember-crimson);
+  --chart-1: var(--ember-rust);
+  --chart-2: var(--ember-gold);
+  --chart-3: var(--ember-crimson);
+  --chart-4: oklch(0.55 0.06 298);
+  --chart-5: oklch(0.85 0.04 80);
+  --sidebar: oklch(0.15 0.05 298);
+  --sidebar-foreground: oklch(0.95 0.02 80);
+  --sidebar-primary: var(--ember-rust);
+  --sidebar-primary-foreground: oklch(0.98 0.01 80);
+  --sidebar-accent: var(--ember-gold);
+  --sidebar-accent-foreground: var(--ember-midnight);
+  --sidebar-border: oklch(0.3 0.06 30);
+  --sidebar-ring: var(--ember-crimson);
+}
+
+@theme inline {
+  --color-ember-midnight: var(--ember-midnight);
+  --color-ember-crimson: var(--ember-crimson);
+  --color-ember-rust: var(--ember-rust);
+  --color-ember-gold: var(--ember-gold);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    margin: 0;
+    min-height: 100vh;
+  }
+}
+
+@utility no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

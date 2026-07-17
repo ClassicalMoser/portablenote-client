@@ -1,9 +1,13 @@
-import { render } from "solid-js/web";
-import App from "./App";
+import { render } from 'solid-js/web';
+import { App } from '@interface';
 /* @refresh reload */
-import "@composition";
-import "./index.css";
+import '@composition';
+import './index.css';
 
-const root = document.getElementById("root");
+const root = document.querySelector('#root');
 
-render(() => <App />, root!);
+if (root === null) {
+  throw new Error('Root element #root not found');
+}
+
+render(() => <App />, root);

@@ -1,51 +1,27 @@
 {
-    "prettier.enable": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "[json]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[jsonc]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "editor.codeActionsOnSave": {
-      "source.fixAll.eslint": "explicit",
-      "source.formatDocument": "explicit"
-    },
-    "editor.formatOnSave": true,
-    "eslint.enable": true,
-    "eslint.run": "onType",
-    "eslint.nodePath": "node_modules",
-  
-    // Enable eslint for all supported languages
-    "eslint.validate": [
-      "javascript",
-      "javascriptreact",
-      "typescript",
-      "typescriptreact",
-      "vue",
-      "html",
-      "markdown",
-      "json",
-      "jsonc",
-      "yaml",
-      "toml",
-      "xml",
-      "gql",
-      "graphql",
-      "astro",
-      "svelte",
-      "css",
-      "less",
-      "scss",
-      "pcss",
-      "postcss"
-    ],
-    "testing.coverageToolbarEnabled": true,
-  
-    "typescript.suggest.autoImports": true,
-    "typescript.preferences.autoImportFileExcludePatterns": [
-      "**/node_modules/**/lodash", // Exclude lodash from auto-import suggestions
-      "**/node_modules/**/moment"
-    ]
-  }
-  
+  "editor.defaultFormatter": "oxc.oxc-vscode",
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.oxc": "explicit"
+  },
+  "oxc.enable": true,
+  "oxc.enable.oxlint": true,
+  "oxc.enable.oxfmt": true,
+  "oxc.configPath": "oxlint.config.ts",
+  "oxc.fmt.configPath": "oxfmt.config.ts",
+  "oxc.lint.run": "onType",
+  "oxc.path.oxlint": "./node_modules/.bin/oxlint",
+  "oxc.path.oxfmt": "./node_modules/.bin/oxfmt",
+  "eslint.enable": false,
+  "prettier.enable": false,
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "testing.coverageToolbarEnabled": true,
+  "typescript.suggest.autoImports": true,
+  "typescript.preferences.autoImportFileExcludePatterns": [
+    "**/node_modules/**/lodash",
+    "**/node_modules/**/moment"
+  ]
+}

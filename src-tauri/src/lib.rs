@@ -1,4 +1,5 @@
 mod composition;
+mod settings_commands;
 mod vault_commands;
 
 use std::sync::Mutex;
@@ -23,6 +24,8 @@ pub fn run() {
             vault_commands::delete_block,
             vault_commands::add_edge,
             vault_commands::remove_edge,
+            settings_commands::get_last_vault_path,
+            settings_commands::set_last_vault_path,
         ])
         .setup(|app| {
             if cfg!(debug_assertions) {

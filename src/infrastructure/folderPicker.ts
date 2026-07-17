@@ -1,8 +1,8 @@
-import type { FolderPickerPort } from "@domain";
+import type { FolderPickerPort } from '@ports';
 /**
- * Infrastructure: folder picker using Tauri dialog. Implements application FolderPickerPort.
+ * Infrastructure: folder picker using Tauri dialog. Implements FolderPickerPort.
  */
-import { open } from "@tauri-apps/plugin-dialog";
+import { open } from '@tauri-apps/plugin-dialog';
 
 export const tauriFolderPicker: FolderPickerPort = {
   async pickFolder(): Promise<string | null> {

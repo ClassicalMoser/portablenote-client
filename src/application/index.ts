@@ -1,10 +1,15 @@
-export { setFolderPicker, setVaultPort } from "./portRegistry";
-export type { FolderPickerPort, VaultPort } from "./ports";
+export { previewBlockContent, saveBlockContent } from './blockContent';
+export { rememberVault, restoreSession } from './session';
 export {
   addBlock,
+  addEdge,
+  deleteBlock,
   initVault,
   initVaultWithPicker,
   listBlocks,
+  mutateContent,
   openVault,
   openVaultWithPicker,
-} from "./vault";
+  removeEdge,
+  renameBlock,
+} from './vault';

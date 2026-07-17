@@ -1,12 +1,27 @@
 /**
- * Infrastructure: Tauri vault bridge. Implements domain VaultPort.
+ * Infrastructure: Tauri vault bridge. Implements the VaultPort contract.
  */
-import type { VaultPort } from "@domain";
-import * as vault from "./vault";
+import type { VaultPort } from '@ports';
+import {
+  addBlock,
+  addEdge,
+  deleteBlock,
+  initVault,
+  listBlocks,
+  mutateContent,
+  openVault,
+  removeEdge,
+  renameBlock,
+} from './vault';
 
 export const tauriVaultPort: VaultPort = {
-  initVault: vault.initVault,
-  openVault: vault.openVault,
-  addBlock: vault.addBlock,
-  listBlocks: vault.listBlocks,
+  initVault,
+  openVault,
+  addBlock,
+  listBlocks,
+  renameBlock,
+  mutateContent,
+  deleteBlock,
+  addEdge,
+  removeEdge,
 };
