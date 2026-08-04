@@ -3,6 +3,7 @@ import type { JSX } from 'solid-js';
 import {
   addBlock,
   initVaultWithPicker,
+  listBacklinkBlocks,
   listBlocks,
   openVaultWithPicker,
   previewBlockContent,
@@ -10,30 +11,18 @@ import {
   saveBlockContent,
 } from '@application';
 import { createSignal, onMount } from 'solid-js';
-import { Button } from '@interface/components/ui/button';
-import { BlockEditor } from '@interface/views';
+import { createStore, reconcile } from 'solid-js/store';
+import {
+  SidebarInset,
+  SidebarProvider,
+} from '@interface/components/ui/sidebar';
+import {
+  AppMenubar,
+  BacklinksPanel,
+  BlockSidebar,
+  WritingSpace,
+} from '@interface/views';
 import type { EditorMode } from '@interface/views';
-
-function StatusMessage(props: {
-  status: () => 'idle' | 'loading' | 'success' | 'error';
-  message: () => string;
-}): JSX.Element {
-  return (
-    <>
-      {props.message() && (
-        <p
-          class={
-            props.status() === 'error'
-              ? 'text-destructive text-sm'
-              : 'text-muted-foreground text-sm'
-          }
-        >
-          {props.message()}
-        </p>
-      )}
-    </>
-  );
-}
 
 export function App(): JSX.Element {
   const [status, setStatus] = createSignal<
@@ -43,26 +32,83 @@ export function App(): JSX.Element {
   const [blockName, setBlockName] = createSignal('');
   const [blocks, setBlocks] = createSignal<Block[]>([]);
   const [selectedId, setSelectedId] = createSignal<string | null>(null);
-  const [draft, setDraft] = createSignal('');
-  const [mode, setMode] = createSignal<EditorMode>('edit');
+  /** Per-block drafts — independent of selection and of view mode. */
+  const [drafts, setDrafts] = createStore<Record<string, string>>({});
   const [previewHtml, setPreviewHtml] = createSignal('');
+  const [linkPickerOpen, setLinkPickerOpen] = createSignal(false);
+  const [backlinks, setBacklinks] = createSignal<Block[]>([]);
+  /** View mode — independent of which block is selected. */
+  const [mode, setMode] = createSignal<EditorMode>('edit');
 
   const busy = () => status() === 'loading';
+
+  const draft = (): string => {
+    const id = selectedId();
+    if (id === null) {
+      return '';
+    }
+    return drafts[id] ?? '';
+  };
+
+  function ensureDraft(block: Block): void {
+    if (drafts[block.id] === undefined) {
+      setDrafts(block.id, block.content);
+    }
+  }
+
+  function pruneDrafts(nextBlocks: Block[]): void {
+    const keep = new Set(nextBlocks.map((block) => block.id));
+    const next: Record<string, string> = {};
+    for (const [id, text] of Object.entries(drafts)) {
+      if (keep.has(id)) {
+        next[id] = text;
+      }
+    }
+    setDrafts(reconcile(next));
+  }
+
+  async function refreshBacklinks(
+    blockId: string | null,
+    nextBlocks: Block[],
+  ): Promise<void> {
+    if (blockId === null) {
+      setBacklinks([]);
+      return;
+    }
+    const links = await listBacklinkBlocks(blockId, nextBlocks);
+    setBacklinks(links);
+  }
+
+  async function refreshPreview(): Promise<void> {
+    if (mode() !== 'preview' || selectedId() === null) {
+      setPreviewHtml('');
+      return;
+    }
+    const html = await previewBlockContent(draft());
+    setPreviewHtml(html);
+  }
 
   async function refreshBlocks(): Promise<void> {
     const next = await listBlocks();
     setBlocks(next);
+    pruneDrafts(next);
     const id = selectedId();
     if (id !== null) {
       const stillThere = next.find((b) => b.id === id);
       if (stillThere === undefined) {
         setSelectedId(null);
-        setDraft('');
         setPreviewHtml('');
-        setMode('edit');
+        setBacklinks([]);
       } else {
-        setDraft(stillThere.content);
+        // Saved/canonical content wins for the open block after a vault refresh.
+        setDrafts(id, stillThere.content);
+        if (mode() === 'preview') {
+          setPreviewHtml(await previewBlockContent(stillThere.content));
+        }
+        await refreshBacklinks(id, next);
       }
+    } else {
+      setBacklinks([]);
     }
   }
 
@@ -116,9 +162,10 @@ export function App(): JSX.Element {
         return;
       }
       setSelectedId(null);
-      setDraft('');
+      setDrafts(reconcile({}));
       setPreviewHtml('');
-      setMode('edit');
+      setBacklinks([]);
+      setLinkPickerOpen(false);
       await refreshBlocks();
       setStatus('success');
       setMessage(`Vault opened at ${path}`);
@@ -160,17 +207,27 @@ export function App(): JSX.Element {
     }
   }
 
-  function handleSelect(blockId: string): void {
+  async function handleSelect(blockId: string): Promise<void> {
     const block = blocks().find((b) => b.id === blockId);
     if (block === undefined) {
       return;
     }
+    ensureDraft(block);
     setSelectedId(block.id);
-    setDraft(block.content);
-    setPreviewHtml('');
-    setMode('edit');
+    setLinkPickerOpen(false);
     setMessage('');
-    setStatus('idle');
+
+    try {
+      if (mode() === 'preview') {
+        setStatus('loading');
+        await refreshPreview();
+        setStatus('idle');
+      }
+      await refreshBacklinks(block.id, blocks());
+    } catch (error) {
+      setStatus('error');
+      setMessage(error instanceof Error ? error.message : String(error));
+    }
   }
 
   async function handleModeChange(next: EditorMode): Promise<void> {
@@ -210,58 +267,59 @@ export function App(): JSX.Element {
   }
 
   return (
-    <main class="mx-auto flex min-h-svh max-w-2xl flex-col gap-6 p-8">
-      <h1 class="text-2xl font-semibold tracking-tight">Portable Note</h1>
-      <div class="flex flex-col gap-3">
-        <Button onClick={handleInitVault} disabled={busy()}>
-          {busy() ? 'Working…' : 'Init vault…'}
-        </Button>
-        <StatusMessage status={status} message={message} />
-        <Button variant="outline" onClick={handleOpenVault} disabled={busy()}>
-          Open vault
-        </Button>
-        <Button
-          variant="secondary"
-          onClick={handleListBlocks}
-          disabled={busy()}
-        >
-          Refresh blocks
-        </Button>
-        <div class="flex gap-2">
-          <input
-            class="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-9 w-full rounded-md border px-3 py-1 text-sm focus-visible:ring-2 focus-visible:outline-none"
-            type="text"
-            placeholder="Block name"
-            value={blockName()}
-            onInput={(e) => setBlockName(e.currentTarget.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleAddBlock()}
-          />
-          <Button onClick={handleAddBlock} disabled={busy()}>
-            Create
-          </Button>
-        </div>
-      </div>
-
-      <BlockEditor
+    <SidebarProvider class="min-h-svh">
+      <BlockSidebar
         blocks={blocks}
         selectedId={selectedId}
-        draft={draft}
-        mode={mode}
-        previewHtml={previewHtml}
+        blockName={blockName}
         busy={busy}
-        statusMessage={message}
-        statusKind={status}
+        onBlockNameChange={setBlockName}
+        onCreateBlock={handleAddBlock}
         onSelect={handleSelect}
-        onDraftChange={(value) => {
-          setDraft(value);
-          if (status() !== 'loading' && message() !== '') {
-            setMessage('');
-            setStatus('idle');
-          }
-        }}
-        onModeChange={handleModeChange}
-        onSave={handleSave}
       />
-    </main>
+      <SidebarInset class="flex min-h-svh flex-1 flex-col overflow-hidden">
+        <AppMenubar
+          busy={busy}
+          canSave={() => selectedId() !== null}
+          mode={mode}
+          statusMessage={message}
+          statusKind={status}
+          onInitVault={handleInitVault}
+          onOpenVault={handleOpenVault}
+          onRefreshBlocks={handleListBlocks}
+          onInsertLink={() => setLinkPickerOpen(true)}
+          onModeChange={handleModeChange}
+          onSave={handleSave}
+        />
+        <WritingSpace
+          selectedId={selectedId}
+          blocks={blocks}
+          draft={draft}
+          mode={mode}
+          previewHtml={previewHtml}
+          busy={busy}
+          linkPickerOpen={linkPickerOpen}
+          onLinkPickerOpenChange={setLinkPickerOpen}
+          onNavigateBlock={handleSelect}
+          onDraftChange={(value) => {
+            const id = selectedId();
+            if (id === null) {
+              return;
+            }
+            setDrafts(id, value);
+            if (status() !== 'loading' && message() !== '') {
+              setMessage('');
+              setStatus('idle');
+            }
+          }}
+        />
+        <BacklinksPanel
+          visible={() => selectedId() !== null}
+          backlinks={backlinks}
+          busy={busy}
+          onSelect={handleSelect}
+        />
+      </SidebarInset>
+    </SidebarProvider>
   );
 }

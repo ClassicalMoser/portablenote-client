@@ -1,5 +1,9 @@
+export { AppMenubar, type AppMenubarProps } from './AppMenubar';
+export { BacklinksPanel, type BacklinksPanelProps } from './BacklinksPanel';
+export { BlockSidebar, type BlockSidebarProps } from './BlockSidebar';
+export { LinkPicker, type LinkPickerProps } from './LinkPicker';
 export {
-  BlockEditor,
-  type BlockEditorProps,
+  WritingSpace,
   type EditorMode,
-} from './BlockEditor';
+  type WritingSpaceProps,
+} from './WritingSpace';

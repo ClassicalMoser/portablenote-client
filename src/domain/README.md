@@ -4,7 +4,7 @@ Pure types and pure functions. **Zero imports** — no `solid-js`, no `@tauri-ap
 
 ## What belongs here
 
-- Types mirroring the Rust core (`portablenote_core::domain::types`) and spec artifacts: `Block`, edge/document/manifest shapes, ID types.
+- Types mirroring the Rust core (`portablenote_core::domain::types`) and spec artifacts: `Block`, `Edge`, `EdgesForBlock`, document/manifest shapes, ID types.
 - The `BlockContent` AST (`content.ts`): a **closed** union of markdown node types with **no heading variant** — spec §2 forbids headings inside block content, so the type makes that state unrepresentable. `BlockRef` is distinct from `Link` for `[text](block:uuid)` (spec §2). `ContentCodecError` for codec parse/validate failures; `extractBlockRefs` for spec §9.
 - Domain error shape (`VaultError` with a code + message) — planned; adapters translate into it.
 - Pure helpers over these types (validation predicates, ref extraction over the AST).

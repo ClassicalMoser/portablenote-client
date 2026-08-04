@@ -1,4 +1,4 @@
-import type { Block } from '@domain';
+import type { Block, Edge, EdgesForBlock } from '@domain';
 /**
  * Bridge to Tauri vault commands. Errors from Rust surface as rejected
  * promises. NOTE: Tauri v2 expects invoke argument keys in camelCase and
@@ -24,6 +24,31 @@ export function addBlock(name: string, content: string): Promise<void> {
 /** List all blocks, sorted by name. */
 export function listBlocks(): Promise<Block[]> {
   return invoke('list_blocks');
+}
+
+/** List all graph edges. */
+export function listEdges(): Promise<Edge[]> {
+  return invoke('list_edges');
+}
+
+/** Outgoing and incoming edges for a block. */
+export function edgesFor(blockId: string): Promise<EdgesForBlock> {
+  return invoke('edges_for', { blockId });
+}
+
+/** Source block IDs that link to the given block. */
+export function backlinks(blockId: string): Promise<string[]> {
+  return invoke('backlinks', { blockId });
+}
+
+/** Block IDs with no graph edges. */
+export function orphans(): Promise<string[]> {
+  return invoke('orphans');
+}
+
+/** Resolve a vault-unique block name to its UUID, or null if missing. */
+export function resolveName(name: string): Promise<string | null> {
+  return invoke('resolve_name', { name });
 }
 
 /** Rename a block. */

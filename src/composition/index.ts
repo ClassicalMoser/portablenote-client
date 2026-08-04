@@ -1,1 +1,1 @@
-import './wire';
+export { wireTauriInfrastructureToPorts } from './wire';

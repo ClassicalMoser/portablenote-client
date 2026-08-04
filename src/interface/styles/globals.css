@@ -31,15 +31,15 @@
 :root {
   /*
     Embernote brand (from icon.svg)
-    midnight  #080018  rgb(8 0 24)       → oklch(0.114 0.061 298.1)
-    crimson   #800600  rgb(128 6 0)      → oklch(0.380 0.152 30.1)
-    rust      #9F3000  rgb(159 48 0)     → oklch(0.473 0.154 38.2)
-    gold      #FF990E  rgb(255 153 14)   → oklch(0.772 0.172 64.0)
+    midnight  #00001A  rgb(0 0 26)       → oklch(0.098 0.068 264.1)
+    crimson   #9A0700  rgb(154 7 0)      → oklch(0.433 0.174 29.9)
+    rust      #B53600  rgb(181 54 0)     → oklch(0.518 0.171 37.6)
+    gold      #FF9C17  rgb(255 156 23)   → oklch(0.777 0.170 65.0)
   */
-  --ember-midnight: oklch(0.114 0.061 298.1);
-  --ember-crimson: oklch(0.38 0.152 30.1);
-  --ember-rust: oklch(0.473 0.154 38.2);
-  --ember-gold: oklch(0.772 0.172 64);
+  --ember-midnight: oklch(0.098 0.068 264.1);
+  --ember-crimson: oklch(0.433 0.174 29.9);
+  --ember-rust: oklch(0.518 0.171 37.6);
+  --ember-gold: oklch(0.777 0.17 65);
 
   --radius: 0.625rem;
 

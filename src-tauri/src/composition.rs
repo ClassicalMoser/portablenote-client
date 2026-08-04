@@ -13,12 +13,21 @@ use portablenote_core::application::results::VaultWrite;
 use portablenote_core::application::runner::UseCases;
 use portablenote_core::domain::checksum;
 use portablenote_core::domain::error::DomainError;
-use portablenote_core::domain::types::Block;
+use portablenote_core::domain::queries;
+use portablenote_core::domain::types::{Block, Edge, Vault};
 use portablenote_infra::fs::{
     FsBlockStore, FsDocumentStore, FsGraphStore, FsJournalStore, FsManifestStore, FsMutationGate,
     FsNameIndex,
 };
 use portablenote_infra::SystemClock;
+use serde::Serialize;
+
+/// Outgoing + incoming edges for one block (core `queries::edges_for`).
+#[derive(Debug, Clone, Serialize)]
+pub struct EdgesForBlock {
+    pub outgoing: Vec<Edge>,
+    pub incoming: Vec<Edge>,
+}
 
 /// Vault session: owns FS adapters and exposes the use-case surface for Tauri commands.
 pub struct VaultSession {
@@ -301,5 +310,58 @@ impl VaultSession {
         let mut blocks = self.blocks.list();
         blocks.sort_by(|a, b| a.name.cmp(&b.name));
         blocks
+    }
+
+    fn vault_snapshot(&self) -> Option<Vault> {
+        FsMutationGate {
+            blocks: &self.blocks,
+            graph: &self.graph,
+            documents: &self.documents,
+            names: &self.names,
+            manifest: &self.manifest,
+        }
+        .build_vault()
+    }
+
+    /// All edges in `block-graph.json` (spec §3).
+    pub fn list_edges(&self) -> Vec<Edge> {
+        self.graph.as_block_graph().edges.clone()
+    }
+
+    /// Outgoing and incoming edges for a block (core `queries::edges_for`).
+    pub fn edges_for(&self, block_id: Uuid) -> EdgesForBlock {
+        let Some(vault) = self.vault_snapshot() else {
+            return EdgesForBlock {
+                outgoing: Vec::new(),
+                incoming: Vec::new(),
+            };
+        };
+        let (outgoing, incoming) = queries::edges_for(&vault, block_id);
+        EdgesForBlock {
+            outgoing: outgoing.into_iter().cloned().collect(),
+            incoming: incoming.into_iter().cloned().collect(),
+        }
+    }
+
+    /// Source block IDs with an edge pointing at `block_id` (core `queries::backlinks`).
+    pub fn backlinks(&self, block_id: Uuid) -> Vec<Uuid> {
+        let Some(vault) = self.vault_snapshot() else {
+            return Vec::new();
+        };
+        queries::backlinks(&vault, block_id)
+    }
+
+    /// Block IDs with no graph edges (spec orphaned blocks; core `queries::orphans`).
+    pub fn orphans(&self) -> Vec<Uuid> {
+        let Some(vault) = self.vault_snapshot() else {
+            return Vec::new();
+        };
+        queries::orphans(&vault)
+    }
+
+    /// Resolve a vault-unique block name to its UUID (core `queries::resolve_name`).
+    pub fn resolve_name(&self, name: &str) -> Option<Uuid> {
+        let vault = self.vault_snapshot()?;
+        queries::resolve_name(&vault, name)
     }
 }

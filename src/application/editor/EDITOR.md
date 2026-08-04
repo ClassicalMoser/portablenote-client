@@ -19,7 +19,7 @@ All mutations go through typed transactions. Each maps to zero or more spec comm
 | `insertText` / `deleteRange` / inline toggles | Pure AST edit; marks block dirty                                                          | `MutateBlockContent` on commit                      |
 | `splitBlock(blockId, offset, headingText)`    | Triggered by typing `#`–`######` prefix at line start. Ends current block, starts new one | `AddBlock` + `MutateBlockContent` + document update |
 | `mergeWithPrevious(blockId)`                  | Appends content into previous block, retires this block                                   | `MutateBlockContent` + `DeleteBlockSafe`            |
-| `linkBlock(range, targetId)`                  | Wraps range in a `BlockRef` node                                                          | `AddEdge` (+ `MutateBlockContent`)                  |
+| `linkBlock(range, targetId)`                  | Wraps range in a `BlockRef` node                                                          | `MutateBlockContent` (edge auto-created atomically) |
 | `commitBlock(blockId)`                        | Serialize via codec → persist                                                             | `MutateBlockContent`                                |
 
 ## Identity policies (provisional — two-tier model, not yet in spec)

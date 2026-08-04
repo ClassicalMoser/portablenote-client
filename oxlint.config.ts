@@ -210,7 +210,7 @@ const config: OxlintConfig = {
     'import/no-duplicates': [
       'error',
       {
-        'prefer-inline': false,
+        preferInline: false,
       },
     ],
   },
@@ -620,6 +620,30 @@ const config: OxlintConfig = {
         'typescript/explicit-function-return-type': 'off',
       },
       plugins: ['typescript', 'import'],
+    },
+    {
+      // Zaidan/shadcn owned copies — keep upstream shape; don't re-lint as app code.
+      files: [
+        'src/interface/components/ui/sidebar.tsx',
+        'src/interface/components/ui/menubar.tsx',
+        'src/interface/components/ui/sheet.tsx',
+        'src/interface/components/ui/tooltip.tsx',
+        'src/interface/components/ui/skeleton.tsx',
+        'src/interface/components/ui/separator.tsx',
+        'src/interface/components/ui/input.tsx',
+        'src/interface/hooks/use-mobile.ts',
+      ],
+      rules: {
+        'typescript/explicit-module-boundary-types': 'off',
+        'typescript/consistent-type-definitions': 'off',
+        'import/no-namespace': 'off',
+        'import/consistent-type-specifier-style': 'off',
+        'eslint/arrow-body-style': 'off',
+        'eslint/capitalized-comments': 'off',
+        'unicorn/prefer-global-this': 'off',
+        'unicorn/no-document-cookie': 'off',
+      },
+      plugins: ['typescript', 'import', 'eslint', 'unicorn'],
     },
   ],
 };

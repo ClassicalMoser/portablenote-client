@@ -16,7 +16,7 @@ Components and views: props in, DOM out. Built with zaidan (shadcn for SolidJS).
 - `components/ui/` — zaidan primitives (`pnpm dlx shadcn@latest add @zaidan/<name>`).
 - `lib/utils.ts` — `cn` only (class merge). No domain logic.
 - `styles/` — Tailwind tokens (`globals.css`), Vega component styles (`base.css`), `@tailwindcss/typography` for markdown preview (`prose`).
-- `views/` — screens: `BlockEditor` (raw MD + HTML preview), vault open/init smoke in `App.tsx`; graph/document views blocked on Rust reads.
+- `views/` — screens: `WritingSpace` (raw MD + preview + link picker), `BacklinksPanel`, vault chrome in `App.tsx` / `AppMenubar`; document views still blocked on document query ports.
 
 ## Adding a component
 

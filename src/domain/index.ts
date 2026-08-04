@@ -25,4 +25,4 @@ export type {
   Blockquote,
 } from './content';
 export { ContentCodecError, extractBlockRefs } from './content';
-export type { Block } from './vault-types';
+export type { Block, Edge, EdgesForBlock } from './vault-types';

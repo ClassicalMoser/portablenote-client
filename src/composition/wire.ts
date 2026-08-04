@@ -16,7 +16,15 @@ import {
   setVaultPort,
 } from '@ports';
 
-setAppSettings(tauriAppSettings);
-setContentCodec(remarkContentCodec);
-setFolderPicker(tauriFolderPicker);
-setVaultPort(tauriVaultPort);
+const wireTauriInfrastructureToPorts = (): void => {
+  setAppSettings(tauriAppSettings);
+  setContentCodec(remarkContentCodec);
+  setFolderPicker(tauriFolderPicker);
+  setVaultPort(tauriVaultPort);
+};
+
+/* In the future, we will have a separate DI structure for the web build.
+They will implement the exact same ports, so interface and application
+code will be exactly the same. */
+
+export { wireTauriInfrastructureToPorts };

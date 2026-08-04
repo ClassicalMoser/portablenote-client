@@ -2,11 +2,11 @@
 
 use std::path::PathBuf;
 
-use portablenote_core::domain::types::Block;
+use portablenote_core::domain::types::{Block, Edge};
 use tauri::State;
 use uuid::Uuid;
 
-use crate::composition::VaultSession;
+use crate::composition::{EdgesForBlock, VaultSession};
 use crate::VaultState;
 
 fn parse_uuid(s: &str) -> Result<Uuid, String> {
@@ -61,6 +61,38 @@ pub fn add_block(
 #[tauri::command]
 pub fn list_blocks(state: State<VaultState>) -> Result<Vec<Block>, String> {
     with_session(&state, |s| Ok(s.list_blocks()))
+}
+
+/// List all graph edges.
+#[tauri::command]
+pub fn list_edges(state: State<VaultState>) -> Result<Vec<Edge>, String> {
+    with_session(&state, |s| Ok(s.list_edges()))
+}
+
+/// Outgoing and incoming edges for a block.
+#[tauri::command]
+pub fn edges_for(state: State<VaultState>, block_id: String) -> Result<EdgesForBlock, String> {
+    let id = parse_uuid(&block_id)?;
+    with_session(&state, |s| Ok(s.edges_for(id)))
+}
+
+/// Source block IDs that link to the given block.
+#[tauri::command]
+pub fn backlinks(state: State<VaultState>, block_id: String) -> Result<Vec<Uuid>, String> {
+    let id = parse_uuid(&block_id)?;
+    with_session(&state, |s| Ok(s.backlinks(id)))
+}
+
+/// Block IDs with no graph edges.
+#[tauri::command]
+pub fn orphans(state: State<VaultState>) -> Result<Vec<Uuid>, String> {
+    with_session(&state, |s| Ok(s.orphans()))
+}
+
+/// Resolve a vault-unique block name to its UUID, or null if missing.
+#[tauri::command]
+pub fn resolve_name(state: State<VaultState>, name: String) -> Result<Option<Uuid>, String> {
+    with_session(&state, |s| Ok(s.resolve_name(&name)))
 }
 
 /// Rename a block.

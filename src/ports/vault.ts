@@ -1,4 +1,4 @@
-import type { Block } from '@domain';
+import type { Block, Edge, EdgesForBlock } from '@domain';
 
 /**
  * Port for vault operations. One method per spec mutation/query command
@@ -15,6 +15,16 @@ export interface VaultPort {
   addBlock: (name: string, content: string) => Promise<void>;
   /** Query: all blocks, sorted by name. */
   listBlocks: () => Promise<Block[]>;
+  /** Query: all graph edges (spec §3). */
+  listEdges: () => Promise<Edge[]>;
+  /** Query: outgoing + incoming edges for a block (core `queries::edges_for`). */
+  edgesFor: (blockId: string) => Promise<EdgesForBlock>;
+  /** Query: source block IDs with an edge to this block (core `queries::backlinks`). */
+  backlinks: (blockId: string) => Promise<string[]>;
+  /** Query: block IDs with no edges (spec §4 Orphaned Blocks; core `queries::orphans`). */
+  orphans: () => Promise<string[]>;
+  /** Query: resolve vault-unique name → block UUID (core `queries::resolve_name`). */
+  resolveName: (name: string) => Promise<string | null>;
   /** RenameBlock. Propagates to inline refs vault-wide (spec §2). */
   renameBlock: (blockId: string, newName: string) => Promise<void>;
   /** MutateBlockContent. Content must not contain headings (spec §2). */

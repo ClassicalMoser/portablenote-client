@@ -6,6 +6,7 @@ Use cases, application state, and the editor engine. Imports `@domain` and `@por
 
 - `vault.ts` — use cases, one per spec command. Shape: resolve port → call → (once stores exist) update store → return domain result. Thin today; they grow store updates, not business logic (vault semantics live in the Rust core).
 - `blockContent.ts` — raw markdown save (`parse` → `serialize` → mutate) and preview (`parse` → `toHtml`). Standing raw-MD editor path until the AST transaction engine lands.
+- `blockLink.ts` — raw-MD link insert / target filter / `block:` href parse / backlink resolution. Edge creation remains core’s job on save.
 - `session.ts` — `restoreSession` (reopen last vault at startup; clears stale path, never auto-inits) and `rememberVault` (best-effort persist after successful open/init).
 - `state/` (planned) — Solid stores: `vaultStore` (session status, blocks/edges/documents indexes), `editorStore` (open drafts, dirty set, selection). **All application-state signals live here.**
 - `editor/` (planned) — the AST transaction engine. See `editor/EDITOR.md` before touching. Raw MD editing does not live here.

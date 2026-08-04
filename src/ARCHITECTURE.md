@@ -54,6 +54,6 @@ Never add an `allowImportsFrom` entry to make an import compile. If a change see
 
 **Aligned:** ports extracted to `src/ports`; boundaries enforced by oxlint; `VaultPort` covers all nine implemented commands; Tauri invoke keys camelCase; components live in `src/interface`; `ContentCodecPort` + remark/GFM codec with fixpoint tests; `BlockContent` AST in `@domain` (no heading variant).
 
-**Still evolving:** no stores yet (use cases return values directly to components); no AST editor engine (raw MD + HTML preview via rehype); Rust side lacks read commands (`list_edges`, `get_document(s)`, orphan query) which block graph/document views; `App.tsx` is still largely a smoke UI.
+**Still evolving:** no stores yet (use cases return values directly to components); no AST editor engine (raw MD + HTML preview via rehype); document queries (`get_document(s)`) not yet bridged; linking UX (picker / navigate / backlinks panel) not built — graph read ports are in place; `App.tsx` is still largely a smoke UI.
 
 When touching features, nudge code toward the target boundaries rather than widening new exceptions.

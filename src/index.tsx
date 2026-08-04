@@ -1,13 +1,16 @@
+import { RouterProvider } from '@tanstack/solid-router';
 import { render } from 'solid-js/web';
-import { App } from '@interface';
+import { router } from '@interface/router';
 /* @refresh reload */
-import '@composition';
+import { wireTauriInfrastructureToPorts } from '@composition';
 import './index.css';
 
 const root = document.querySelector('#root');
+
+wireTauriInfrastructureToPorts();
 
 if (root === null) {
   throw new Error('Root element #root not found');
 }
 
-render(() => <App />, root);
+render(() => <RouterProvider router={router} />, root);
